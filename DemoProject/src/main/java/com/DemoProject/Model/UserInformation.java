@@ -11,10 +11,12 @@ public class UserInformation {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+	
 	private String firstName;
 	private String lastName;
 	private String email;
 	private String password;
+	
 	public int getId() {
 		return id;
 	}
