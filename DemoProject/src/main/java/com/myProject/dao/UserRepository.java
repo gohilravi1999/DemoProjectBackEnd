@@ -1,8 +1,8 @@
-package com.DemoProject.Dao;
+package com.myProject.dao;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.DemoProject.Model.UserInformation;
+import com.myProject.model.UserInformation;
 
 public interface UserRepository extends CrudRepository<UserInformation, Long> {
 

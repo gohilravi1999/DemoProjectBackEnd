@@ -1,4 +1,4 @@
-package com.DemoProject.InputValidation;
+package com.myProject.inputValidation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,4 +1,4 @@
-package com.DemoProject.Controller;
+package com.myProject.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.DemoProject.Dao.UserRepository;
-import com.DemoProject.InputValidation.InputValidation;
-import com.DemoProject.Model.UserInformation;
+import com.myProject.dao.UserRepository;
+import com.myProject.inputValidation.InputValidation;
+import com.myProject.model.UserInformation;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
