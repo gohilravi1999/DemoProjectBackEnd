@@ -3,6 +3,7 @@ package com.myProject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,5 +37,15 @@ public class ProjectController {
 				System.out.println("Signup fail");
 				return "Signup fail";
 			}
+	}
+	
+	@GetMapping("/all")
+	public String getHello() {
+		return "hello user";
+	}
+	
+	@GetMapping("/secured/all")
+	public String getHii() {
+		return "Secured Hii";
 	}
 }

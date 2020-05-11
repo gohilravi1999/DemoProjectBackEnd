@@ -17,6 +17,19 @@ public class UserInformation {
 	private String email;
 	private String password;
 	
+	public UserInformation() {
+		
+	}
+
+	public UserInformation(UserInformation userInformation) {
+		this.email=userInformation.email;
+		this.firstName=userInformation.firstName;
+		this.lastName=userInformation.lastName;
+		this.password=userInformation.password;
+		this.id=userInformation.id;
+	}
+	
+	
 	public int getId() {
 		return id;
 	}
