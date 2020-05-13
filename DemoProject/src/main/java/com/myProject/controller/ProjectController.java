@@ -1,48 +1,30 @@
 package com.myProject.controller;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myProject.dao.UserRepository;
-import com.myProject.inputValidation.InputValidation;
-import com.myProject.model.UserInformation;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/api/application")
 public class ProjectController {
-	
-	@Autowired
-	private UserRepository userRepository;
-	
-	@GetMapping("/authenticate")
-	public String login() {
-		return "authenticated successfully";
+	@GetMapping("/public")
+	public String allAccess() {
+		return "Public Content.";
 	}
 	
-	
-	@PostMapping("/signup")
-	public String signupUser(@RequestBody UserInformation userInformation)
-	{	
-			boolean checkFistName = InputValidation.isValidName(userInformation.getFirstName());
-			boolean checkLastName = InputValidation.isValidName(userInformation.getLastName());
-			boolean checkEmail = InputValidation.isValidEmail(userInformation.getEmail());
-			boolean checkPassword = InputValidation.isValidPassword(userInformation.getPassword());
-			
-			if(checkFistName && checkLastName && checkEmail && checkPassword) {
-				System.out.println("Signup Successful");
-				userRepository.save(userInformation);
-				return "SignUp Successful";
-			}
-			else
-			{
-				System.out.println("Signup fail");
-				return "Signup fail";
-			}
+	@GetMapping("/user")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public String userAccess() {
+		return "User Content.";
+	}
+
+	@GetMapping("/admin")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String adminAccess() {
+		return "Admin Board.";
 	}
 }

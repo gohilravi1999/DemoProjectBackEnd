@@ -1,11 +1,18 @@
 package com.myProject.dao;
 
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import com.myProject.model.UserInformation;
 
-public interface UserRepository extends CrudRepository<UserInformation, Long>
-{
+@Repository
+public interface UserRepository extends JpaRepository<UserInformation, Long> {
 	
+	Optional<UserInformation> findByUsername(String username);
+
+	Boolean existsByUsername(String username);
+
+	Boolean existsByEmail(String email);
 }
