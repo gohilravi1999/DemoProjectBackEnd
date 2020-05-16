@@ -31,6 +31,8 @@ public class UserInformation {
 	
 	@Size(max = 130)
 	private String password;
+	
+	private boolean isActive;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
@@ -41,10 +43,11 @@ public class UserInformation {
 	public UserInformation() {
 	}
 
-	public UserInformation(String username, String email, String password) {
+	public UserInformation(String username, String email, String password,boolean isActive) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.isActive=isActive;
 	}
 
 	public Long getId() {
@@ -57,6 +60,14 @@ public class UserInformation {
 
 	public String getUsername() {
 		return username;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	public void setUsername(String username) {

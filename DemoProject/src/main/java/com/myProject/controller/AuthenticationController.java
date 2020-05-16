@@ -2,6 +2,7 @@ package com.myProject.controller;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,24 +52,34 @@ public class AuthenticationController {
 	
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), 
-																loginRequest.getPassword()));
-
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
-		UserDetailsImplementation userDetails = (UserDetailsImplementation) authentication.getPrincipal();	
+		Optional<UserInformation> userData = userRepository.findByUsername(loginRequest.getUsername());
+		UserInformation user = userData.get();
 		
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
-				.collect(Collectors.toList());
+		if(user.isActive()) {
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), 
+																	loginRequest.getPassword()));
 
-		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
-												 roles));
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			String jwt = jwtUtils.generateJwtToken(authentication);
+			UserDetailsImplementation userDetails = (UserDetailsImplementation) authentication.getPrincipal();	
+			
+			List<String> roles = userDetails.getAuthorities().stream()
+					.map(item -> item.getAuthority())
+					.collect(Collectors.toList());
+
+			return ResponseEntity.ok(new JwtResponse(jwt, 
+													 userDetails.getId(), 
+													 userDetails.getUsername(), 
+													 userDetails.getEmail(), 
+													 roles));
+			
+		}
+		else {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: user is deactive !"));
+		}		
 	}
 	
 
@@ -88,7 +99,8 @@ public class AuthenticationController {
 
 		UserInformation user = new UserInformation(signUpRequest.getUsername(), 
 							 signUpRequest.getEmail(),
-							 encoder.encode(signUpRequest.getPassword()));
+							 encoder.encode(signUpRequest.getPassword()),
+							 signUpRequest.isActive());
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
@@ -113,7 +125,8 @@ public class AuthenticationController {
 				}
 			});
 		}
-
+		
+		user.setActive(true);
 		user.setRoles(roles);
 		userRepository.save(user);
 

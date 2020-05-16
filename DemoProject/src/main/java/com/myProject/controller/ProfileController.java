@@ -42,7 +42,7 @@ public class ProfileController {
 	   
 	    if (userData.isPresent()) {
 	    	
-	    	if(user.getUsername().endsWith(userInformation.getUsername()))
+	    	if(user.getUsername().equals(userInformation.getUsername()))
 	    	{
 	    		if(isExistsEmail) {
 		    		return ResponseEntity
@@ -54,7 +54,7 @@ public class ProfileController {
 	    		}
 	    	}
 	    	
-	    	else if(user.getEmail().endsWith(userInformation.getEmail()))
+	    	else if(user.getEmail().equals(userInformation.getEmail()))
 	    	{
 	    		if(isExistsUsername) {
 		    		return ResponseEntity
