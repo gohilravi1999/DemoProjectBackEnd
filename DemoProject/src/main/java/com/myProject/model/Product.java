@@ -25,6 +25,8 @@ public class Product {
 	@NotBlank
 	@Size(max = 100)
 	private String imagePath;
+	
+	private boolean isActiveProduct;
 
 	public Product() {
 		
@@ -32,6 +34,14 @@ public class Product {
 
 	public Long getId() {
 		return id;
+	}
+
+	public boolean isActiveProduct() {
+		return isActiveProduct;
+	}
+
+	public void setActiveProduct(boolean isActiveProduct) {
+		this.isActiveProduct = isActiveProduct;
 	}
 
 	public void setId(Long id) {
