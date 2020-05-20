@@ -34,47 +34,19 @@ public class ProfileController {
 	  public ResponseEntity<?> updateUserInformation(@PathVariable("id") Long id,
 			  										@RequestBody UserInformation userInformation) {
 		
-	    Optional<UserInformation> userData = userRepository.findById(id);
-	    UserInformation user = userData.get();
-	    
-	    boolean isExistsUsername = userRepository.existsByUsername(userInformation.getUsername());
-	    boolean isExistsEmail = userRepository.existsByEmail(userInformation.getEmail());
-	   
-	    if (userData.isPresent()) {
-	    	
-	    	if(user.getUsername().equals(userInformation.getUsername()))
-	    	{
-	    		if(isExistsEmail) {
-		    		return ResponseEntity
-							.badRequest()
-							.body(new MessageResponse("Error: Email is already taken!"));
-		    	}
-	    		else {
-	    			user.setEmail(userInformation.getEmail());
-	    		}
-	    	}
-	    	
-	    	else if(user.getEmail().equals(userInformation.getEmail()))
-	    	{
-	    		if(isExistsUsername) {
-		    		return ResponseEntity
-							.badRequest()
-							.body(new MessageResponse("Error: Username is already taken!"));
-		    	}
-	    		else {
-	    			user.setUsername(userInformation.getUsername());
-	    		}
-	    	}
-	    	else {
-	    		user.setUsername(userInformation.getUsername());
-	    	    user.setEmail(userInformation.getEmail());
-	    	}
-	    
-	      return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
-	    }
-	    else {
-	      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	    }
+		Optional<UserInformation> userDetail = this.userRepository.findById(id);
+		UserInformation user = userDetail.get();
+
+		if (userDetail.isPresent()) {
+			user.setUsername(userInformation.getUsername());
+			user.setEmail(userInformation.getEmail());
+			userRepository.save(user);
+			return ResponseEntity.ok(new MessageResponse("User updated successfully!"));
+		} else {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: User is not updated!"));
+		}
 	}
 	
 	@PutMapping("/changePassword/{id}")

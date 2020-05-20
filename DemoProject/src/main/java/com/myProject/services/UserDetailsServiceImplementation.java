@@ -13,11 +13,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import com.myProject.dao.OrderRepository;
 import com.myProject.dao.ProductRepository;
 import com.myProject.dao.UserRepository;
 import com.myProject.jwtResponse.MessageResponse;
+import com.myProject.model.Order;
 import com.myProject.model.Product;
 import com.myProject.model.UserInformation;
 
@@ -30,6 +31,10 @@ public class UserDetailsServiceImplementation implements UserDetailsService{
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private OrderRepository orderRepository;
+	
 
 	@Override
 	@Transactional
@@ -182,4 +187,110 @@ public class UserDetailsServiceImplementation implements UserDetailsService{
 	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	  }
+	
+	public ResponseEntity<?> getProductById(Long id){
+		Optional<Product> productData = productRepository.findById(id);
+	    Product product = productData.get();
+	   
+	    return new ResponseEntity<>(product, HttpStatus.OK); 
+	    
+	}
+	
+	public ResponseEntity<?> makeOrder(Long id,Order orderInformation) {
+		
+			orderInformation.setUserId(id);
+			orderInformation.setName(orderInformation.getName());
+			orderInformation.setAddress(orderInformation.getAddress());
+			orderInformation.setMobileNumber(orderInformation.getMobileNumber());
+			orderInformation.setPincode(orderInformation.getPincode());
+			orderInformation.setNumberOfItem(orderInformation.getNumberOfItem());
+			orderInformation.setOrderStatus(false);
+			orderInformation.setApproved(false);
+			orderInformation.setRejected(false);
+			orderInformation.setCanceled(false);
+			orderRepository.save(orderInformation);
+			return ResponseEntity.ok(new MessageResponse("Order is added successfully!"));
+		}		
+	
+	public List<Order> getPendingOrder(Long id){
+		
+		 List<Order> orders = orderRepository.findPendingOrder(id);
+		 return orders;
+	}
+	
+	public List<Order> getApprovedOrder(Long id){
+		
+		 List<Order> orders = orderRepository.findApprovedOrder(id);
+		 return orders;
+	}
+
+	public List<Order> getRejectedOrder(Long id){
+		
+		 List<Order> orders = orderRepository.findRejectedOrder(id);
+		 return orders;
+	}
+	
+	public List<Order> getCanceledOrder(Long id){
+		
+		 List<Order> orders = orderRepository.findCanceledOrder(id);
+		 return orders;
+	}
+	
+	public List<Order> getAllPendingOrder(){
+		
+		 List<Order> orders = orderRepository.findAllOrder();
+		 return orders;
+	}
+	
+	public ResponseEntity<?> approveOrder(Order orderInfo)
+	{
+		Optional<Order> orderData = orderRepository.findById(orderInfo.getId());
+	    Order order = orderData.get();
+	    order.setOrderStatus(true);
+	    order.setApproved(true);
+	    return new ResponseEntity<>(orderRepository.save(order), HttpStatus.OK);
+	}
+	
+	public ResponseEntity<?> cancelOrder(Order orderInfo)
+	{
+		Optional<Order> orderData = orderRepository.findById(orderInfo.getId());
+	    Order order = orderData.get();
+	    order.setOrderStatus(true);
+	    order.setCanceled(true);
+	    return new ResponseEntity<>(orderRepository.save(order), HttpStatus.OK);
+	}
+	
+	public ResponseEntity<?> rejectOrder(Order orderInfo)
+	{
+		Optional<Order> orderData = orderRepository.findById(orderInfo.getId());
+	    Order order = orderData.get();
+	    order.setOrderStatus(true);
+	    order.setRejected(true);
+	    return new ResponseEntity<>(orderRepository.save(order), HttpStatus.OK);
+	}
+	
+	public List<Order> getAllOrder(){
+		
+		 List<Order> orders = orderRepository.findAll();
+		 return orders;
+	}
+	
+	public Order getOrderDetail(Long id) {
+		
+		Optional<Order> orderData = orderRepository.findById(id);
+	    Order orderDetail = orderData.get();
+		return orderDetail;
+	}
+	
+	public ResponseEntity<?> editOrder(Long id,Order orderInformation) {
+		
+		Optional<Order> orderData = orderRepository.findById(id);
+	    Order order = orderData.get();
+	    order.setAddress(orderInformation.getAddress());
+	    order.setMobileNumber(orderInformation.getMobileNumber());
+	    order.setPincode(orderInformation.getPincode());
+	    order.setNumberOfItem(orderInformation.getNumberOfItem());
+		orderRepository.save(order);
+		return ResponseEntity.ok(new MessageResponse("Order is edited successfully!"));
+	}
 }

@@ -79,7 +79,7 @@ public class AdminController {
 	  }
 	 
 	 @GetMapping("/getListOfActiveProduct")
-		@PreAuthorize("hasRole('ADMIN')")
+		@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 		public ResponseEntity<List<Product>> getAllActiveProduct() {
 		 
 		 return userDetailsServiceImp.getAllActiveProduct();
@@ -115,6 +115,12 @@ public class AdminController {
 			
 			 return userDetailsServiceImp.editProduct(id,productInformation);
 			
+		}
+		
+		@GetMapping("/getProduct/{id}")
+		@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+		public ResponseEntity<?> getProductById(@PathVariable("id") Long id){
+			return userDetailsServiceImp.getProductById(id);
 		}
 }
 
