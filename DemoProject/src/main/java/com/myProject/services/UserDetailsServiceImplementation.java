@@ -293,4 +293,17 @@ public class UserDetailsServiceImplementation implements UserDetailsService{
 		orderRepository.save(order);
 		return ResponseEntity.ok(new MessageResponse("Order is edited successfully!"));
 	}
+	
+	public List<Order> getAllApproved(){
+		
+		 List<Order> orders = orderRepository.findAllApproved();
+		 return orders;
+	}
+	
+	public List<Order> getAllRejected(){
+		
+		 List<Order> orders = orderRepository.findAllRejected();
+		 return orders;
+	}
+	
 }

@@ -109,4 +109,18 @@ public class OrderController {
 	{
 		return userDetailsServiceImp.cancelOrder(order);
 	}
+	
+	@GetMapping("/getAllApproved")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<Order> getAllApproved(){
+		
+		return userDetailsServiceImp.getAllApproved();
+	}
+	
+	@GetMapping("/getAllRejected")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<Order> getAllRejected(){
+		
+		return userDetailsServiceImp.getAllRejected();
+	}
 }

@@ -16,6 +16,12 @@ public interface OrderRepository extends JpaRepository<Order, Long>{
 	@Query("SELECT o FROM Order o WHERE o.orderStatus = 0")
 	public List<Order> findAllOrder();
 	
+	@Query("SELECT o FROM Order o WHERE o.isApproved = 1")
+	public List<Order> findAllApproved();
+	
+	@Query("SELECT o FROM Order o WHERE o.isRejected = 1")
+	public List<Order> findAllRejected();
+	
 	@Query("SELECT o FROM Order o WHERE o.isApproved = 1 AND o.userId=:id")
 	public List<Order> findApprovedOrder(@Param("id") long id);
 	
