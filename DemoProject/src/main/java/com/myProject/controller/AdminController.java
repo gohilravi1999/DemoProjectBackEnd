@@ -50,6 +50,12 @@ public class AdminController {
 		return userDetailsServiceImp.getAllActiveUser();
 	  }
 	
+	@GetMapping("/getAllUser")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<UserInformation>> getAllUser() {
+		return userDetailsServiceImp.getAllUser();
+	  }
+	
 	@GetMapping("/getListOfInActiveUser")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<UserInformation>> getAllInActiveUser() {

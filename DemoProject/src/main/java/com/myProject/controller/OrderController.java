@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myProject.model.Order;
+import com.myProject.model.UserInformation;
 import com.myProject.services.UserDetailsServiceImplementation;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -72,6 +73,13 @@ public class OrderController {
 	public List<Order> getAllOrder(){
 		
 		return userDetailsServiceImp.getAllOrder();
+	}
+	
+	@PostMapping("/getOrderOfUser")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<Integer> getOrderOfUser(@RequestBody List<UserInformation> userInformation){
+		
+		return userDetailsServiceImp.getOrderOfUser(userInformation);
 	}
 	
 	@PutMapping("/approveOrder")

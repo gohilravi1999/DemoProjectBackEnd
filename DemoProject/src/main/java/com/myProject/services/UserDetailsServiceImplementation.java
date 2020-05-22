@@ -171,6 +171,23 @@ public class UserDetailsServiceImplementation implements UserDetailsService{
 	    }
 	  }
 	
+	public ResponseEntity<List<UserInformation>> getAllUser() {
+	    try {
+	      List<UserInformation> users = new ArrayList<UserInformation>();
+
+	        userRepository.findAll().forEach(users::add);
+
+	      if (users.isEmpty()) {
+	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	      }
+
+	      return new ResponseEntity<>(users, HttpStatus.OK);
+	      
+	    } catch (Exception e) {
+	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	  }
+	
 	public ResponseEntity<List<UserInformation>> getAllActiveUser() {
 	    try {
 	      List<UserInformation> users = new ArrayList<UserInformation>();
@@ -273,6 +290,16 @@ public class UserDetailsServiceImplementation implements UserDetailsService{
 		
 		 List<Order> orders = orderRepository.findAll();
 		 return orders;
+	}
+	
+	public List<Integer> getOrderOfUser(List<UserInformation> userInformation){
+		List<Integer> orders = new ArrayList<Integer>();
+		
+		for(int i=0;i<userInformation.size();i++) {
+			int order = orderRepository.findOrderById(userInformation.get(i).getId());
+			orders.add(order);
+		}
+		return orders;
 	}
 	
 	public Order getOrderDetail(Long id) {
